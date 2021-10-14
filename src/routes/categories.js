@@ -1,4 +1,7 @@
-import { isEmptyString, alreadyExists } from '../data/dataValidation.js';
+import {
+	alreadyExists,
+	categoryInputValidation,
+} from '../data/dataValidation.js';
 import { searchAllCategories, insertCategory } from '../data/categories.js';
 
 const route = '/categories';
@@ -12,8 +15,10 @@ function getAllCategories(request, response, dbConnection) {
 function addCategory(request, response, dbConnection) {
 	const { name } = request.body;
 
-	if (isEmptyString(name)) {
-		response.status(400).send('Please enter a name');
+	const validationError = categoryInputValidation.validate({ name }).error;
+
+	if (validationError) {
+		response.status(400).send(validationError.message);
 		return;
 	}
 
