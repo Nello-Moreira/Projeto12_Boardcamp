@@ -1,10 +1,10 @@
 import { isEmptyString, alreadyExists } from '../data/dataValidation.js';
-import { getAllCategories, insertCategory } from '../data/categories.js';
+import { searchAllCategories, insertCategory } from '../data/categories.js';
 
 const route = '/categories';
 
-function getCategories(request, response, dbConnection) {
-	getAllCategories(dbConnection).then(queryResult => {
+function getAllCategories(request, response, dbConnection) {
+	searchAllCategories(dbConnection).then(queryResult => {
 		response.status(200).send(queryResult.rows);
 	});
 }
@@ -17,7 +17,7 @@ function addCategory(request, response, dbConnection) {
 		return;
 	}
 
-	getAllCategories(dbConnection).then(queryResult => {
+	searchAllCategories(dbConnection).then(queryResult => {
 		if (alreadyExists({ name }, queryResult.rows, 'name')) {
 			response.status(409).send('This category already exists');
 			return;
@@ -33,7 +33,7 @@ function addCategory(request, response, dbConnection) {
 
 const categories = {
 	route,
-	getCategories,
+	getAllCategories,
 	addCategory,
 };
 
