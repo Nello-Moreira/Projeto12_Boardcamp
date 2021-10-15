@@ -1,4 +1,4 @@
-import { alreadyExists, gameSchema } from '../data/dataValidation.js';
+import { gameSchema } from '../data/dataValidation.js';
 import { searchAllGames, searchGameByName, insertGame } from '../data/games.js';
 
 const route = '/games';
@@ -26,6 +26,13 @@ async function getAllGames(request, response, dbConnection) {
 
 async function addGame(request, response, dbConnection) {
 	const gameObject = request.body;
+
+	const validationError = gameSchema.validate(gameObject).error;
+
+	if (validationError) {
+		response.status(400).send(validationError.message);
+		return;
+	}
 
 	try {
 		const games = await searchGameByName(dbConnection, gameObject.name);
