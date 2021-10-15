@@ -27,8 +27,14 @@ async function getAllGames(request, response, dbConnection) {
 async function addGame(request, response, dbConnection) {
 	const gameObject = request.body;
 
-	console.log(gameObject);
 	try {
+		const games = await searchGameByName(dbConnection, gameObject.name);
+
+		if (games.rows.length > 0) {
+			response.status(409).send('This game already exists');
+			return;
+		}
+
 		insertGame(dbConnection, gameObject);
 		response.sendStatus(201);
 	} catch (error) {
@@ -37,7 +43,6 @@ async function addGame(request, response, dbConnection) {
 			.send('There was an internal error. Please try again later.');
 
 		console.log(error);
-		return;
 	}
 }
 

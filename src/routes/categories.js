@@ -45,7 +45,6 @@ async function addCategory(request, response, dbConnection) {
 			.send('There was an internal error. Please try again later.');
 
 		console.log(error);
-		return;
 	}
 }
 
