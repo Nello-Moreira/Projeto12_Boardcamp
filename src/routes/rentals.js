@@ -1,18 +1,18 @@
 const route = '/rentals';
 
-function getAllRentals(request, response, dbConnection) {
+async function getAllRentals(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function withdrawRental(request, response, dbConnection) {
+async function withdrawRental(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function returnRental(request, response, dbConnection) {
+async function returnRental(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function removeRental(request, response, dbConnection) {
+async function removeRental(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 

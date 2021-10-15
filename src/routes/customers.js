@@ -1,18 +1,18 @@
 const route = '/customers';
 
-function getAllCustomers(request, response, dbConnection) {
+async function getAllCustomers(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function getCustomer(request, response, dbConnection) {
+async function getCustomer(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function addCustomer(request, response, dbConnection) {
+async function addCustomer(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function changeCustomer(request, response, dbConnection) {
+async function changeCustomer(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 

@@ -1,10 +1,10 @@
 const route = '/games';
 
-function getAllGames(request, response, dbConnection) {
+async function getAllGames(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
-function addGame(request, response, dbConnection) {
+async function addGame(request, response, dbConnection) {
 	response.sendStatus(501);
 }
 
