@@ -50,7 +50,7 @@ async function addGame(request, response) {
 			return;
 		}
 
-		insertGame(gameObject);
+		const successfulInsert = await insertGame(gameObject);
 		response.sendStatus(201);
 	} catch (error) {
 		response

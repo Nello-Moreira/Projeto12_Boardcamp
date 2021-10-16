@@ -27,11 +27,11 @@ server.post(games.route, games.addGame);
 
 server.get(customers.route, customers.getAllCustomers);
 
-server.get(customers.route, customers.getCustomer);
+server.get(customers.route + '/:id', customers.getCustomerById);
 
 server.post(customers.route, customers.addCustomer);
 
-server.put(customers.route, customers.changeCustomer);
+server.put(customers.route + '/:id', customers.changeCustomer);
 
 // ####################### rentals ####################### //
 
