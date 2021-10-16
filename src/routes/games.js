@@ -5,16 +5,16 @@ import { searchCategoryById } from '../data/categories.js';
 
 const route = '/games';
 
-async function getAllGames(request, response, dbConnection) {
+async function getAllGames(request, response) {
 	const { name } = request.query;
 
 	try {
 		let games;
 
 		if (name) {
-			games = await searchGameByName(dbConnection, name);
+			games = await searchGameByName(name);
 		} else {
-			games = await searchAllGames(dbConnection);
+			games = await searchAllGames();
 		}
 		response.status(200).send(games.rows);
 	} catch (error) {
@@ -26,7 +26,7 @@ async function getAllGames(request, response, dbConnection) {
 	}
 }
 
-async function addGame(request, response, dbConnection) {
+async function addGame(request, response) {
 	const gameObject = request.body;
 
 	const validationError = gameSchema.validate(gameObject).error;
@@ -37,11 +37,8 @@ async function addGame(request, response, dbConnection) {
 	}
 
 	try {
-		const games = await searchGameByName(dbConnection, gameObject.name);
-		const categories = await searchCategoryById(
-			dbConnection,
-			gameObject.categoryId
-		);
+		const games = await searchGameByName(gameObject.name);
+		const categories = await searchCategoryById(gameObject.categoryId);
 
 		if (games.rows.length > 0) {
 			response.status(409).send('This game already exists');
@@ -53,7 +50,7 @@ async function addGame(request, response, dbConnection) {
 			return;
 		}
 
-		insertGame(dbConnection, gameObject);
+		insertGame(gameObject);
 		response.sendStatus(201);
 	} catch (error) {
 		response

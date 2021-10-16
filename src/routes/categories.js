@@ -8,9 +8,9 @@ import {
 
 const route = '/categories';
 
-async function getAllCategories(request, response, dbConnection) {
+async function getAllCategories(request, response) {
 	try {
-		const categories = await searchAllCategories(dbConnection);
+		const categories = await searchAllCategories();
 		response.status(200).send(categories.rows);
 	} catch (error) {
 		response
@@ -21,7 +21,7 @@ async function getAllCategories(request, response, dbConnection) {
 	}
 }
 
-async function addCategory(request, response, dbConnection) {
+async function addCategory(request, response) {
 	const { name } = request.body;
 	const validationError = categorySchema.validate({ name }).error;
 
@@ -31,14 +31,14 @@ async function addCategory(request, response, dbConnection) {
 	}
 
 	try {
-		const categories = await searchCategoryByName(dbConnection, name);
+		const categories = await searchCategoryByName(name);
 
 		if (categories.rows.length > 0) {
 			response.status(409).send('This category already exists');
 			return;
 		}
 
-		const successfulInsert = await insertCategory(dbConnection, name);
+		const successfulInsert = await insertCategory(name);
 		response.sendStatus(201);
 	} catch (error) {
 		response

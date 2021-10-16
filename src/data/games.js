@@ -1,4 +1,6 @@
-const searchAllGames = dbConnection =>
+import dbConnection from '../data/connection.js';
+
+const searchAllGames = () =>
 	dbConnection.query(
 		`SELECT 
             games.id, 
@@ -12,7 +14,7 @@ const searchAllGames = dbConnection =>
         JOIN categories ON games."categoryId" = categories.id;`
 	);
 
-const searchGameByName = (dbConnection, name) =>
+const searchGameByName = name =>
 	dbConnection.query(
 		`SELECT 
             games.id, 
@@ -28,7 +30,7 @@ const searchGameByName = (dbConnection, name) =>
 		[`%${name}%`]
 	);
 
-const insertGame = (dbConnection, gameObject) => {
+const insertGame = gameObject => {
 	const { name, image, stockTotal, categoryId, pricePerDay } = gameObject;
 	dbConnection.query(
 		'INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1,$2,$3,$4,$5);',

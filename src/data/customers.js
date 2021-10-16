@@ -1,7 +1,8 @@
-const searchAllCustomers = dbConnection =>
-	dbConnection.query('SELECT * FROM customers');
+import dbConnection from '../data/connection.js';
 
-const searchCustomersByCpf = (dbConnection, cpf) =>
+const searchAllCustomers = () => dbConnection.query('SELECT * FROM customers');
+
+const searchCustomersByCpf = cpf =>
 	dbConnection.query('SELECT * FROM customers WHERE cpf = $1;', [`${cpf}%`]);
 
 export { searchAllCustomers, searchCustomersByCpf };

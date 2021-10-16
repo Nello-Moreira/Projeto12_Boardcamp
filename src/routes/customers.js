@@ -2,17 +2,17 @@ import { searchAllCustomers, searchCustomersByCpf } from '../data/customers.js';
 
 const route = '/customers';
 
-async function getAllCustomers(request, response, dbConnection) {
+async function getAllCustomers(request, response) {
 	const { cpf } = request.query;
 	let customers;
 
 	try {
 		if (isNaN(cpf)) {
-			customers = await searchAllCustomers(dbConnection);
+			customers = await searchAllCustomers();
 			response.status(200).send(customers.rows);
 			return;
 		}
-		customers = await searchCustomersByCpf(dbConnection, cpf);
+		customers = await searchCustomersByCpf(cpf);
 		response.status(200).send(customers.rows);
 		return;
 	} catch (error) {
@@ -24,15 +24,15 @@ async function getAllCustomers(request, response, dbConnection) {
 	}
 }
 
-async function getCustomer(request, response, dbConnection) {
+async function getCustomer(request, response) {
 	response.sendStatus(501);
 }
 
-async function addCustomer(request, response, dbConnection) {
+async function addCustomer(request, response) {
 	response.sendStatus(501);
 }
 
-async function changeCustomer(request, response, dbConnection) {
+async function changeCustomer(request, response) {
 	response.sendStatus(501);
 }
 
