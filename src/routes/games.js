@@ -1,5 +1,6 @@
 import { gameSchema } from '../data/dataValidation.js';
 import { searchAllGames, searchGameByName, insertGame } from '../data/games.js';
+import { searchCategoryById } from '../data/categories.js';
 
 const route = '/games';
 
@@ -36,9 +37,18 @@ async function addGame(request, response, dbConnection) {
 
 	try {
 		const games = await searchGameByName(dbConnection, gameObject.name);
+		const categories = await searchCategoryById(
+			dbConnection,
+			gameObject.categoryId
+		);
 
 		if (games.rows.length > 0) {
 			response.status(409).send('This game already exists');
+			return;
+		}
+
+		if (categories.rows.length === 0) {
+			response.status(400).send('"categoryId" must be an existing id');
 			return;
 		}
 
