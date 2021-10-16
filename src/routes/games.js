@@ -1,4 +1,5 @@
 import { gameSchema } from '../data/dataValidation.js';
+
 import { searchAllGames, searchGameByName, insertGame } from '../data/games.js';
 import { searchCategoryById } from '../data/categories.js';
 

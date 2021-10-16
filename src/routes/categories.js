@@ -1,4 +1,5 @@
-import { alreadyExists, categorySchema } from '../data/dataValidation.js';
+import { categorySchema } from '../data/dataValidation.js';
+
 import {
 	searchAllCategories,
 	searchCategoryByName,
