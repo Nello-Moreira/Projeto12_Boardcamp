@@ -38,9 +38,13 @@ const insertRental = ({
 		]
 	);
 
+const deleteRental = rentalId =>
+	dbConnection.query(`DELETE FROM rentals WHERE id = $1;`, [rentalId]);
+
 export {
 	searchAllRentals,
 	searchRentalsByParam,
 	searchOpenedRentalsByParam,
 	insertRental,
+	deleteRental,
 };

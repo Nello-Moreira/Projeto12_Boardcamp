@@ -41,7 +41,7 @@ server.post(rentals.route, rentals.withdrawRental);
 
 server.post(rentals.route + '/:id/return', rentals.returnRental);
 
-server.delete(rentals.route, rentals.removeRental);
+server.delete(rentals.route + '/:id', rentals.removeRental);
 
 // #######################  ####################### //
 

@@ -7,6 +7,7 @@ import {
 	searchRentalsByParam,
 	searchOpenedRentalsByParam,
 	insertRental,
+	deleteRental,
 } from '../data/rentals.js';
 
 const route = '/rentals';
@@ -186,7 +187,40 @@ async function returnRental(request, response) {
 }
 
 async function removeRental(request, response) {
-	response.sendStatus(501);
+	const { id } = request.params;
+	const rentalId = Number(id);
+
+	const idValidation = idsSchema.validate(rentalId);
+
+	if (idValidation.error) {
+		response.status(400).send(idValidation.error.message);
+		return;
+	}
+
+	try {
+		const rental = (await searchRentalsByParam('id', rentalId)).rows;
+
+		if (rental.length === 0) {
+			response
+				.status(404)
+				.send(`There is no rental with id = ${rentalId}`);
+			return;
+		}
+
+		if (rental[0].returnDate !== null) {
+			response.status(400);
+			return;
+		}
+
+		const successfulDelete = await deleteRental(id);
+		response.sendStatus(200);
+	} catch (error) {
+		response
+			.status(500)
+			.send('There was an internal error. Please try again later.');
+
+		console.log(error);
+	}
 }
 
 const customers = {
