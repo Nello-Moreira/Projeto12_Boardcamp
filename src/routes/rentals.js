@@ -7,8 +7,11 @@ import {
 	searchRentalsByParam,
 	searchOpenedRentalsByParam,
 	insertRental,
+	updateRental,
 	deleteRental,
 } from '../data/rentals.js';
+
+import { calculateDelayFee } from '../helpers.js';
 
 const route = '/rentals';
 
@@ -183,7 +186,45 @@ async function withdrawRental(request, response) {
 }
 
 async function returnRental(request, response) {
-	response.sendStatus(501);
+	const { id } = request.params;
+	const rentalId = Number(id);
+
+	const idValidation = idsSchema.validate(rentalId);
+
+	if (idValidation.error) {
+		response.status(400).send(idValidation.error.message);
+		return;
+	}
+
+	try {
+		let rental = (await searchRentalsByParam('id', rentalId)).rows;
+
+		if (rental.length === 0) {
+			response
+				.status(404)
+				.send(`There is no rental with id = ${rentalId}`);
+			return;
+		}
+
+		rental = rental[0];
+
+		if (rental.returnDate !== null) {
+			response.status(400);
+			return;
+		}
+
+		rental = {
+			...rental,
+			returnDate: new Date(),
+			delayFee: await calculateDelayFee(rental),
+		};
+
+		const successfulReturn = await updateRental(rental);
+		response.sendStatus(200);
+	} catch (error) {
+		response.sendStatus(500);
+		console.log(error);
+	}
 }
 
 async function removeRental(request, response) {
@@ -212,7 +253,7 @@ async function removeRental(request, response) {
 			return;
 		}
 
-		const successfulDelete = await deleteRental(id);
+		const successfulDelete = await deleteRental(rentalId);
 		response.sendStatus(200);
 	} catch (error) {
 		response

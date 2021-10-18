@@ -38,6 +38,34 @@ const insertRental = ({
 		]
 	);
 
+const updateRental = ({
+	id,
+	customerId,
+	gameId,
+	rentDate,
+	daysRented,
+	returnDate,
+	originalPrice,
+	delayFee,
+}) =>
+	dbConnection.query(
+		`
+        UPDATE rentals 
+        SET ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")  
+        = ($2, $3, $4, $5, $6, $7, $8)
+        WHERE id = $1;`,
+		[
+			id,
+			customerId,
+			gameId,
+			rentDate,
+			daysRented,
+			returnDate,
+			originalPrice,
+			delayFee,
+		]
+	);
+
 const deleteRental = rentalId =>
 	dbConnection.query(`DELETE FROM rentals WHERE id = $1;`, [rentalId]);
 
@@ -46,5 +74,6 @@ export {
 	searchRentalsByParam,
 	searchOpenedRentalsByParam,
 	insertRental,
+	updateRental,
 	deleteRental,
 };
