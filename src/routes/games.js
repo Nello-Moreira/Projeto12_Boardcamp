@@ -3,6 +3,8 @@ import { gameSchema } from '../data/dataValidation.js';
 import { searchAllGames, searchGameByName, insertGame } from '../data/games.js';
 import { searchCategoryById } from '../data/categories.js';
 
+import { internalErrorResponse } from '../helpers.js';
+
 const route = '/games';
 
 async function getAllGames(request, response) {
@@ -18,11 +20,7 @@ async function getAllGames(request, response) {
 		}
 		response.status(200).send(games.rows);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
@@ -53,11 +51,7 @@ async function addGame(request, response) {
 		const successfulInsert = await insertGame(gameObject);
 		response.sendStatus(201);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 

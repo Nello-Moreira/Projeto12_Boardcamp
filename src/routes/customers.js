@@ -8,6 +8,8 @@ import {
 	updateCustomer,
 } from '../data/customers.js';
 
+import { internalErrorResponse } from '../helpers.js';
+
 const route = '/customers';
 
 async function getAllCustomers(request, response) {
@@ -24,11 +26,7 @@ async function getAllCustomers(request, response) {
 		response.status(200).send(customers.rows);
 		return;
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
@@ -49,11 +47,7 @@ async function getCustomerById(request, response) {
 		}
 		response.status(200).send(customer.rows[0]);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
@@ -78,11 +72,7 @@ async function addCustomer(request, response) {
 		const successfulInsert = await insertCustomer(newCustomer);
 		response.sendStatus(201);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
@@ -108,11 +98,7 @@ async function changeCustomer(request, response) {
 
 		response.sendStatus(200);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 

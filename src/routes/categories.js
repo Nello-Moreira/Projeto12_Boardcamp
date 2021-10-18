@@ -6,6 +6,8 @@ import {
 	insertCategory,
 } from '../data/categories.js';
 
+import { internalErrorResponse } from '../helpers.js';
+
 const route = '/categories';
 
 async function getAllCategories(request, response) {
@@ -13,11 +15,7 @@ async function getAllCategories(request, response) {
 		const categories = await searchAllCategories();
 		response.status(200).send(categories.rows);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
@@ -41,11 +39,7 @@ async function addCategory(request, response) {
 		const successfulInsert = await insertCategory(name);
 		response.sendStatus(201);
 	} catch (error) {
-		response
-			.status(500)
-			.send('There was an internal error. Please try again later.');
-
-		console.log(error);
+		internalErrorResponse(response, error);
 	}
 }
 
