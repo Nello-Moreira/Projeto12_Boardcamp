@@ -30,6 +30,9 @@ const searchGameByName = name =>
 		[`%${name}%`]
 	);
 
+const searchGameById = id =>
+	dbConnection.query(`SELECT * FROM games WHERE id = $1`, [id]);
+
 const insertGame = ({ name, image, stockTotal, categoryId, pricePerDay }) =>
 	dbConnection.query(
 		`INSERT INTO 
@@ -38,4 +41,4 @@ const insertGame = ({ name, image, stockTotal, categoryId, pricePerDay }) =>
 		[name, image, stockTotal, categoryId, pricePerDay]
 	);
 
-export { searchAllGames, searchGameByName, insertGame };
+export { searchAllGames, searchGameByName, searchGameById, insertGame };

@@ -39,7 +39,7 @@ server.get(rentals.route, rentals.getAllRentals);
 
 server.post(rentals.route, rentals.withdrawRental);
 
-server.post(rentals.route, rentals.returnRental);
+server.post(rentals.route + '/:id/return', rentals.returnRental);
 
 server.delete(rentals.route, rentals.removeRental);
 
