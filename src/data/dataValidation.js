@@ -30,4 +30,6 @@ const rentalSchema = Joi.object({
 	daysRented: Joi.number().integer().min(1).required(),
 });
 
-export { categorySchema, gameSchema, customerSchema, rentalSchema };
+const idsSchema = Joi.number().integer().min(1);
+
+export { categorySchema, gameSchema, customerSchema, rentalSchema, idsSchema };

@@ -1,13 +1,132 @@
-import { rentalSchema } from '../data/dataValidation.js';
+import { rentalSchema, idsSchema } from '../data/dataValidation.js';
 
-import { searchCustomersById } from '../data/customers.js';
-import { searchGameById } from '../data/games.js';
-import { searchOpenedRentalsByGameId, insertRental } from '../data/rentals.js';
+import { searchAllCustomers, searchCustomersById } from '../data/customers.js';
+import { searchAllGames, searchGameById } from '../data/games.js';
+import {
+	searchAllRentals,
+	searchRentalsByParam,
+	searchOpenedRentalsByParam,
+	insertRental,
+} from '../data/rentals.js';
 
 const route = '/rentals';
 
-async function getAllRentals(request, response) {
-	response.sendStatus(501);
+async function getAllRentals(response) {
+	try {
+		const customers = (await searchAllCustomers()).rows;
+		const games = (await searchAllGames()).rows;
+
+		let rentals = (await searchAllRentals()).rows;
+
+		rentals = rentals.map(rental => {
+			const customer = customers.filter(
+				customer => customer.id === rental.customerId
+			)[0];
+			const game = games.filter(game => game.id === rental.gameId)[0];
+
+			return {
+				...rental,
+				customer: { id: customer.id, name: customer.name },
+				game: {
+					id: game.id,
+					name: game.name,
+					categoryId: game.categoryId,
+					categoryName: game.categoryName,
+				},
+			};
+		});
+
+		response.status(200).send(rentals);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+}
+
+async function getRentalsByCustomerId(response, customerId) {
+	const idValidation = idsSchema.validate(customerId);
+
+	if (idValidation.error) {
+		response.status(400).send(idValidation.error.message);
+		return;
+	}
+
+	try {
+		const customers = (await searchCustomersById(customerId)).rows;
+		const games = (await searchAllGames()).rows;
+		let rentals = (await searchRentalsByParam('customerId', customerId))
+			.rows;
+
+		rentals = rentals.map(rental => {
+			const customer = customers[0];
+			const game = games.filter(game => game.id === rental.gameId)[0];
+
+			return {
+				...rental,
+				customer: { id: customer.id, name: customer.name },
+				game: {
+					id: game.id,
+					name: game.name,
+					categoryId: game.categoryId,
+					categoryName: game.categoryName,
+				},
+			};
+		});
+		response.status(200).send(rentals);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+}
+
+async function getRentalsByGameId(response, gameId) {
+	const idValidation = idsSchema.validate(gameId);
+
+	if (idValidation.error) {
+		response.status(400).send(idValidation.error.message);
+		return;
+	}
+
+	try {
+		const customers = (await searchAllCustomers()).rows;
+		const games = (await searchGameById(gameId)).rows;
+		let rentals = (await searchRentalsByParam('gameId', gameId)).rows;
+
+		rentals = rentals.map(rental => {
+			const customer = customers.filter(
+				customer => customer.id === rental.customerId
+			)[0];
+			const game = games[0];
+
+			return {
+				...rental,
+				customer: { id: customer.id, name: customer.name },
+				game: {
+					id: game.id,
+					name: game.name,
+					categoryId: game.categoryId,
+					categoryName: game.categoryName,
+				},
+			};
+		});
+		response.status(200).send(rentals);
+	} catch (error) {
+		response.sendStatus(500);
+	}
+}
+
+async function getRentals(request, response) {
+	const { customerId, gameId } = request.query;
+
+	if (customerId) {
+		getRentalsByCustomerId(response, customerId);
+		return;
+	}
+
+	if (gameId) {
+		getRentalsByGameId(response, gameId);
+		return;
+	}
+
+	getAllRentals(response);
 }
 
 async function withdrawRental(request, response) {
@@ -37,7 +156,7 @@ async function withdrawRental(request, response) {
 		}
 
 		const openedRentals = (
-			await searchOpenedRentalsByGameId(withdrawRequest.gameId)
+			await searchOpenedRentalsByParam('gameId', withdrawRequest.gameId)
 		).rows.length;
 
 		if (openedRentals === game[0].stockTotal) {
@@ -72,7 +191,7 @@ async function removeRental(request, response) {
 
 const customers = {
 	route,
-	getAllRentals,
+	getRentals,
 	withdrawRental,
 	returnRental,
 	removeRental,

@@ -35,7 +35,7 @@ server.put(customers.route + '/:id', customers.changeCustomer);
 
 // ####################### rentals ####################### //
 
-server.get(rentals.route, rentals.getAllRentals);
+server.get(rentals.route, rentals.getRentals);
 
 server.post(rentals.route, rentals.withdrawRental);
 

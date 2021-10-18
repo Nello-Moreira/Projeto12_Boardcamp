@@ -1,9 +1,16 @@
 import dbConnection from '../data/connection.js';
 
-const searchOpenedRentalsByGameId = gameId =>
+const searchAllRentals = () => dbConnection.query(`SELECT * FROM rentals;`);
+
+const searchRentalsByParam = (param, paramValue) =>
+	dbConnection.query(`SELECT * FROM rentals WHERE "${param}" = $1;`, [
+		paramValue,
+	]);
+
+const searchOpenedRentalsByParam = (param, paramValue) =>
 	dbConnection.query(
-		`SELECT * FROM rentals WHERE "gameId" = $1 AND "returnDate" is NULL`,
-		[gameId]
+		`SELECT * FROM rentals WHERE "${param}" = $1 AND "returnDate" is NULL;`,
+		[paramValue]
 	);
 
 const insertRental = ({
@@ -19,7 +26,7 @@ const insertRental = ({
 		`
     INSERT INTO rentals 
     ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
-    VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    VALUES ($1, $2, $3, $4, $5, $6, $7);`,
 		[
 			customerId,
 			gameId,
@@ -31,4 +38,9 @@ const insertRental = ({
 		]
 	);
 
-export { searchOpenedRentalsByGameId, insertRental };
+export {
+	searchAllRentals,
+	searchRentalsByParam,
+	searchOpenedRentalsByParam,
+	insertRental,
+};

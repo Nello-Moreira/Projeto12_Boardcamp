@@ -3,12 +3,7 @@ import dbConnection from '../data/connection.js';
 const searchAllGames = () =>
 	dbConnection.query(
 		`SELECT 
-            games.id, 
-            games.name, 
-            games.image,
-            games."stockTotal", 
-            games."categoryId", 
-            games."pricePerDay", 
+            games.*, 
             categories.name as "categoryName" 
         FROM games 
         JOIN categories ON games."categoryId" = categories.id;`
@@ -17,12 +12,7 @@ const searchAllGames = () =>
 const searchGameByName = name =>
 	dbConnection.query(
 		`SELECT 
-            games.id, 
-            games.name, 
-            games.image,
-            games."stockTotal", 
-            games."categoryId", 
-            games."pricePerDay", 
+            games.*, 
             categories.name as "categoryName" 
         FROM games 
         JOIN categories ON games."categoryId" = categories.id
@@ -31,7 +21,16 @@ const searchGameByName = name =>
 	);
 
 const searchGameById = id =>
-	dbConnection.query(`SELECT * FROM games WHERE id = $1`, [id]);
+	dbConnection.query(
+		`SELECT 
+            games.*, 
+            categories.name as "categoryName" 
+        FROM games 
+        JOIN categories ON games."categoryId" = categories.id
+        WHERE games.id = $1;
+    `,
+		[id]
+	);
 
 const insertGame = ({ name, image, stockTotal, categoryId, pricePerDay }) =>
 	dbConnection.query(
