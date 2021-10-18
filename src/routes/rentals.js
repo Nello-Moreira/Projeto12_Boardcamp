@@ -235,7 +235,7 @@ async function removeRental(request, response) {
 		}
 
 		if (rental[0].returnDate !== null) {
-			response.status(400);
+			response.sendStatus(400);
 			return;
 		}
 
